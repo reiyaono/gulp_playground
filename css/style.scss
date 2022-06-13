@@ -7,4 +7,7 @@
     color: orange;
     margin: 15px;
   }
+  &-vendor {
+    border-image: url("images/matching.png") 15 round;
+  }
 }
