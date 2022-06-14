@@ -1,0 +1,1 @@
+{"mappings":"AAGE","sources":["src/style.scss"],"sourcesContent":["$redColor: #ea5b54;\n$blue: blue;\n.container {\n  .box {\n    background-color: $redColor;\n    color: $blue;\n  }\n}\n"],"names":[],"version":3,"file":"style.css.map","sourceRoot":"../"}

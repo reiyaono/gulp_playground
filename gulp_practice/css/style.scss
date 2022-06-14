@@ -1,0 +1,13 @@
+.content {
+  padding: 10px;
+  &-head {
+    font-size: 20px;
+  }
+  &-item {
+    color: orange;
+    margin: 15px;
+  }
+  &-vendor {
+    border-image: url("images/matching.png") 15 round;
+  }
+}
