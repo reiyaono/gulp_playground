@@ -1,0 +1,10 @@
+
+.container {
+  margin: 0 auto;
+  &-item {
+    padding: 10px;
+    &-text {
+      font-size: 15px;
+    }
+  }
+}
