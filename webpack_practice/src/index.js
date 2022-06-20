@@ -2,4 +2,4 @@
 
 // const taro = new Hello("taro");
 // taro.greet();
-import './style.scss'
+// import './scss/style.scss'

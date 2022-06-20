@@ -1,46 +1,54 @@
-//path モジュールの読み込み
-const path = require('path');
-//MiniCssExtractPlugin の読み込み
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
- 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path')
+const glob = require("glob");
+
+// const mode = process.env.NODE_ENV || 'development'
+// const prod = mode === 'production'
+
 module.exports = {
- 
-  //エントリポイント（デフォルトと同じなので省略可）
-  entry: './src/index.js',  
-  //出力先（デフォルトと同じなので省略可）
-  output: { 
-    filename: 'mainhoge.js',
-    path: path.resolve(__dirname, 'dist'),
+  entry: {
+    bundle: './src/index.js',
+    global: glob.sync('./src/scss/*.scss')
+  },
+  output: {
+    path: __dirname + '/dist',
+    filename: '[name].js',
+    chunkFilename: '[name].[id].js'
   },
   module: {
     rules: [
-      //SASS 及び CSS 用のローダー
       {
-        loader: 'sass-loader',
-        options: {
-          // ローダーに dart-sass を使用することを明示的に指定
-          implementation: require('sass'),
-        },
+        test: /\.svelte$/,
+        use: {
+          loader: 'svelte-loader',
+          options: {
+            preprocess: require('svelte-preprocess')({
+              scss: true,
+              postcss: ({
+                plugins: [
+                  require('autoprefixer')
+                ]
+              })
+            }),
+            emitCss: true,
+            hotReload: true
+          }
+        }
       },
       {
-        //拡張子 .scss、.sass、css を対象
-        test: /\.(scss|sass|css)$/i,
-        // 使用するローダーの指定（後ろから順番に適用される）
-        use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ],
-      },
-    ],
+        test: /\.scss$/,
+        use: [
+          { loader: MiniCssExtractPlugin.loader },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ]
+      }
+    ]
   },
-  //プラグインの設定
+  mode,
   plugins: [
     new MiniCssExtractPlugin({
-      // 抽出する CSS のファイル名
-      filename: 'style.css',
-    }),
+      filename: '[name].css'
+    })
   ],
-  //source-map タイプのソースマップを出力
-  devtool: 'source-map',
-  // node_modules を監視（watch）対象から除外
-  watchOptions: {
-    ignored: /node_modules/  //正規表現で指定
-  },
-};
+}
