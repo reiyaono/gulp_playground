@@ -1,46 +1,29 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const path = require('path');
 const glob = require("glob");
 
-// const mode = process.env.NODE_ENV || 'development'
-// const prod = mode === 'production'
+const mode = process.env.NODE_ENV || 'development'
 
 module.exports = {
-  entry: {
-    bundle: './src/index.js',
-    global: glob.sync('./src/scss/*.scss')
-  },
+  entry: glob.sync('./src/scss/*.scss'),
   output: {
-    path: __dirname + '/dist',
-    filename: '[name].js',
-    chunkFilename: '[name].[id].js'
+    path: __dirname + '/dist'
   },
   module: {
     rules: [
-      {
-        test: /\.svelte$/,
-        use: {
-          loader: 'svelte-loader',
-          options: {
-            preprocess: require('svelte-preprocess')({
-              scss: true,
-              postcss: ({
-                plugins: [
-                  require('autoprefixer')
-                ]
-              })
-            }),
-            emitCss: true,
-            hotReload: true
-          }
-        }
-      },
       {
         test: /\.scss$/,
         use: [
           { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader' },
-          { loader: 'sass-loader' }
+          {
+            loader: 'sass-loader',
+            options: {
+              // dart-sass を優先
+              implementation: require("sass")
+            }
+          }
         ]
       }
     ]
@@ -48,7 +31,8 @@ module.exports = {
   mode,
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css'
-    })
+      filename: 'style.css'
+    }),
+    new RemoveEmptyScriptsPlugin()
   ],
 }
